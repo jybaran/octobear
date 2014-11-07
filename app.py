@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "hello"
+    return render_template("home.html")
 
 @app.route("/t/<tag>")
 def tag(tag="manatee"):
