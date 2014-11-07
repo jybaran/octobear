@@ -1,3 +1,4 @@
+#!/usr/bin/python
 from flask import Flask, request, url_for, redirect, render_template
 import json, urllib2
 
@@ -5,15 +6,20 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("home.html")
+    query = request.args.get("query",None)
+    if query == None:
+        #flash "You didn't give us a thing! Try again please."
+        return render_template("home.html")
+    else:
+        return redirect(url_for("query", query=query))
 
-@app.route("/t/<tag>")
-def tag(tag="manatee"):
+@app.route("/<query>")
+def query(query):
     url = "http://8tracks.com/mix_sets/tags:%s.json?include=mixes&api_key=b72f8beba38aa9fb230d52bf6f45e2baf9fbf322"
     #add tags w/ +
     #spaces to underscores
     #alternately keyword:<SEARCH TERM>
-    url = url%(tag)
+    url = url%(query)
     request = urllib2.urlopen(url)
     resultstring = request.read()
     #result = json.loads(resultstring)
