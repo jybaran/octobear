@@ -39,8 +39,10 @@ def query(query):
     url = url%(query)
     results = createJSON(url)
     playback = selectPlayback(playToken, results)
-    return createJSON(playback)["set"]["track"]["url"] + " \n this is the link to the page that plays we will work on it later"
-    #return render_template("results.html", query=query, resultstring=resultstring)
+    mixURL = ""+createJSON(playback)["set"]["track"]["url"]
+    #this is the link to the page that plays we will work on it later
+    
+    return render_template("results.html", query=query, mixURL=mixURL)
 
 
 
