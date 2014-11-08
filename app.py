@@ -1,6 +1,6 @@
 #!/usr/bin/python
 from flask import Flask, render_template, request, redirect, \
-    url_for, flash
+    url_for, session, flash
 import json, urllib2
 
 app = Flask(__name__)
@@ -9,7 +9,10 @@ app = Flask(__name__)
 def index():
     query = request.args.get("query",None)
     if query == None:
-        #have it flash "You didn't give us a thing! Try again please."
+        #flash("You didn't give us a thing! Try again please.")
+        #"RuntimeError: the session is unavailable because no secret key was set.
+        #Set the secret_key on the application to something unique and secret."
+        #(no idea what this is about)
         return render_template("home.html")
     else:
         return redirect(url_for("query", query=query))
@@ -25,7 +28,7 @@ def query(query):
     resultstring = request.read()
     #result = json.loads(resultstring)
     #s = ""
-    return resultstring
+    return render_template("results.html", query=query, resultstring=resultstring)
 
 if __name__ == "__main__":
     app.debug = True
