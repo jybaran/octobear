@@ -1,5 +1,6 @@
 #!/usr/bin/python
-from flask import Flask, request, url_for, redirect, render_template
+from flask import Flask, render_template, request, redirect, \
+    url_for, flash
 import json, urllib2
 
 app = Flask(__name__)
@@ -8,7 +9,7 @@ app = Flask(__name__)
 def index():
     query = request.args.get("query",None)
     if query == None:
-        #flash "You didn't give us a thing! Try again please."
+        #have it flash "You didn't give us a thing! Try again please."
         return render_template("home.html")
     else:
         return redirect(url_for("query", query=query))
