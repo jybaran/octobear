@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    query = request.args.get("query",None)
+    query = request.args.get("query", None)
     if query == None:
         flash("You didn't give us a thing! Try again please.")
         return render_template("home.html")
