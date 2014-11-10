@@ -33,9 +33,12 @@ def query(query):
     #alternately keyword:<SEARCH TERM>
     url = url%(query)
     results = createJSON(url)
-    mixID = results["mixes"][0]["id"]
-    mixTitle = results["mixes"][0]["name"]
-    mixDJ = results["mixes"][0]["user"]["login"]
+    try:
+        mixID = results["mixes"][0]["id"]
+        mixTitle = results["mixes"][0]["name"]
+        mixDJ = results["mixes"][0]["user"]["login"]
+    except IndexError:
+         return "I am sorry, but this tag does not exist. Try another?"
     
     return render_template("results.html", query=query, mixID=mixID, mixTitle=mixTitle, mixDJ=mixDJ)
 
