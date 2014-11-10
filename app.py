@@ -9,10 +9,7 @@ app = Flask(__name__)
 def index():
     query = request.args.get("query",None)
     if query == None:
-        #flash("You didn't give us a thing! Try again please.")
-        #"RuntimeError: the session is unavailable because no secret key was set.
-        #Set the secret_key on the application to something unique and secret."
-        #(no idea what this is about)
+        flash("You didn't give us a thing! Try again please.")
         return render_template("home.html")
     else:
         return redirect(url_for("query", query=query))
@@ -43,7 +40,7 @@ def query(query):
     return render_template("results.html", query=query, mixID=mixID, mixTitle=mixTitle, mixDJ=mixDJ)
 
 
-
+app.secret_key = "key_thing"
 
 if __name__ == "__main__":
     app.debug = True
