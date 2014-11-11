@@ -5,14 +5,16 @@ import json, urllib2
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods = ["GET", "POST"])
 def index():
-    query = request.args.get("query", None)
-    if query == None:
-        flash("You didn't give us a thing! Try again please.")
-        return render_template("home.html")
-    else:
-        return redirect(url_for("query", query=query))
+    if request.method == "POST":
+        query = request.form["query"]
+        if query == "":
+            message = "You didn't give us a thing! Try again please."
+            return render_template("home.html", error = True, message = message)
+        else:
+            return redirect(url_for("query", query=query))
+    return render_template("home.html", error = False)
 
 
 def createJSON(url):
@@ -24,6 +26,7 @@ def createJSON(url):
 
 @app.route("/<query>")
 def query(query):
+    message = "I am sorry, but this tag does not exist. Try another?"
     url = "http://8tracks.com/mix_sets/tags:%s.json?include=mixes"
     #add tags w/ +
     #spaces to underscores
@@ -35,7 +38,9 @@ def query(query):
         mixTitle = results["mixes"][0]["name"]
         mixDJ = results["mixes"][0]["user"]["login"]
     except ValueError:
-         return "I am sorry, but this tag does not exist. Try another?"
+        return render_template("home.html", error = True, message = message)
+    except IndexError:
+        return render_template("home.html", error = True, message = message)
     
     return render_template("results.html", query=query, mixID=mixID, mixTitle=mixTitle, mixDJ=mixDJ)
 

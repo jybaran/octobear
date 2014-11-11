@@ -6,19 +6,28 @@
 <br>
 <br>
 
+
+				
+
 <div class="container">
     <div class="panel panel-primary">
     
         <div class="panel-heading">
             <center><h3>What are you into today?</h3></center>
+
         </div>
     
         <div class="panel-body">
-            <form method="GET">             
+{% if error %}
+<div class="alert alert-dismissable alert-danger">
+  <strong>Error:</strong> {{ message }}
+</div>
+{% endif %}
+            <form method="POST">             
                 <input class="form-control" type="text" name="query" placeholder="Cats, manatees, rain">
                 <br>
                 <center>
-                    <button type="submit" class="btn btn-primary">Go!</button>
+                    <button type="submit" class="btn btn-primary btn-warning">Go!</button>
                 </center>
             </form>
         </div>
