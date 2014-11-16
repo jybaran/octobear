@@ -11,6 +11,7 @@ def main():
 
 @app.route("/<error>", methods = ["GET", "POST"])
 def index(error = None):
+    session["count"] = 0
     if request.method == "POST":
         query = request.form["query"]
         if query == "":
@@ -31,8 +32,11 @@ def createJSON(url):
     
     
 
-@app.route("/search/<query>")
+@app.route("/search/<query>", methods = ["GET", "POST"])
 def query(query=None):
+    if request.method == "POST":
+        session["count"] = session["count"] + 1
+        return redirect(url_for("query", query = query))
     message = "I am sorry, but this tag does not exist. Try another?"
     url = "http://8tracks.com/mix_sets/tags:%s.json?include=mixes"
     #add tags w/ +
@@ -41,18 +45,18 @@ def query(query=None):
     url = url%(query)
     try:
         results = createJSON(url)
-        mixID = results["mixes"][0]["id"]
-        mixTitle = results["mixes"][0]["name"]
-        mixDJ = results["mixes"][0]["user"]["login"]
+        mixID = results["mixes"][session["count"]]["id"]
+        mixTitle = results["mixes"][session["count"]]["name"]
+        mixDJ = results["mixes"][session["count"]]["user"]["login"]
     except ValueError:
         return redirect(url_for("index", error="TagError"))
     except IndexError:
         return redirect(url_for("index", error="TagError"))
-    
     return render_template("results.html", query=query, mixID=mixID, mixTitle=mixTitle, mixDJ=mixDJ)
 
-app.secret_key = "key_thing"
+
 
 if __name__ == "__main__":
     app.debug = True
+    app.secret_key = "key_thing"
     app.run()
