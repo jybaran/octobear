@@ -19,8 +19,11 @@ def index(error = None):
             return render_template("home.html", error = True, message = message)
         else:
             return redirect(url_for("query", query=query))
+    if error == "NoMore":
+        message = "Sorry, there are no more playlists with this tag. Try another?"
+        return render_template("home.html", error = True, message = message)
     if error == "TagError":
-        message = "I am sorry, but this tag does not exist. Try another?"
+        message = "Sorry, but this tag does not exist. Try another?"
         return render_template("home.html", error = True, message = message)
     return render_template("home.html", error = False)
 
@@ -45,6 +48,8 @@ def query(query=None):
     url = url%(query)
     try:
         results = createJSON(url)
+        if session["count"] == len(results["mixes"]):
+            return redirect(url_for("index", error = "NoMore"))
         mixID = results["mixes"][session["count"]]["id"]
         mixTitle = results["mixes"][session["count"]]["name"]
         mixDJ = results["mixes"][session["count"]]["user"]["login"]
